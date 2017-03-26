@@ -1,5 +1,6 @@
 GPIO=6
-DIR=falling
+MODE=up
+DIR=rising
 MESSAGE="Restart requested by GPIO trigger."
 COMMAND="/sbin/shutdown -r now"
 DEBOUNCE=1.0
