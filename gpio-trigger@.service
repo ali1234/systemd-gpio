@@ -3,9 +3,8 @@ Description=WiringPi GPIO Trigger
 
 [Service]
 EnvironmentFile=/etc/systemd-gpio/%i
-ExecStart=/bin/sh -c "while gpio -g wfi $GPIO $DIR; do logger \"$MESSAGE\"; $COMMAND; sleep $DEBOUNCE; done"
+ExecStart=/bin/sh -c "while gpio -g wfi $GPIO $DIR; do echo \"$MESSAGE\"; $COMMAND; sleep $DEBOUNCE; done"
 Restart=on-success
 
 [Install]
 WantedBy=multi-user.target
-
