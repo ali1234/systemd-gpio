@@ -3,8 +3,8 @@ Description=WiringPi GPIO Trigger
 
 [Service]
 EnvironmentFile=/etc/systemd-gpio/%i
-ExecPreStart=/usr/bin/gpio -g mode $GPIO in
-ExecPreStart=/usr/bin/gpio -g mode $GPIO $MODE
+ExecStartPre=/usr/bin/gpio -g mode $GPIO in
+ExecStartPre=/usr/bin/gpio -g mode $GPIO $MODE
 ExecStart=/bin/sh -c "while gpio -g wfi $GPIO $DIR; do echo \"$MESSAGE\"; $COMMAND; sleep $DEBOUNCE; done"
 Restart=on-success
 
