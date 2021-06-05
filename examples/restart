@@ -1,6 +1,9 @@
-GPIO=6
+GPIO=3
 MODE=up
-DIR=rising
+
+HOLDTIME=5
+RELEASETIME=25
 MESSAGE="Restart requested by GPIO trigger."
+
 COMMAND="/sbin/shutdown -r now"
 DEBOUNCE=1.0
