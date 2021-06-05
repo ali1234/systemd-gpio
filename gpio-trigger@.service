@@ -7,15 +7,22 @@ Type=exec
 ExecStartPre=/usr/local/bin/gpio -g mode $GPIO in
 ExecStartPre=/usr/local/bin/gpio -g mode $GPIO $MODE
 ExecStart=/bin/sh -c "\
-/usr/local/bin/gpio -g wfi $GPIO falling && \
-/bin/sleep $HOLDTIME && \
-/usr/local/bin/gpio -g read $GPIO|/bin/grep '0' && \
+/usr/local/bin/gpio -g wfi $GPIO falling &&\
+/bin/sleep $HOLDTIME &&\
+/usr/local/bin/gpio -g read $GPIO|/bin/grep '0' &&\
 /bin/sleep $RELEASETIME && \
-/usr/local/bin/gpio -g read $GPIO|/bin/grep '1'\
+/usr/local/bin/gpio -g read $GPIO|/bin/grep '1' &&\
+/bin/touch /tmp/gpio-trigger-action &&\
+/bin/sleep $PRIO \
 "
-ExecStop=/bin/echo \"$MESSAGE\"
-ExecStop=/bin/sh -c "$COMMAND"
-ExecStopPost=/bin/sleep $DEBOUNCE
+
+ExecStopPost=/bin/sh -c "\
+/usr/bin/[ -f /tmp/gpio-trigger-action ] && \
+/bin/rm /tmp/gpio-trigger-action &&\
+/bin/echo \"$MESSAGE\" && \
+$COMMAND && \
+/bin/sleep $DEBOUNCE\
+"
 
 Restart=on-success
 SuccessExitStatus=1
