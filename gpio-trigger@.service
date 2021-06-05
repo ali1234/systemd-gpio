@@ -1,12 +1,19 @@
 [Unit]
-Description=WiringPi GPIO Trigger
+Description=WiringPi GPIO Trigger for %I
 
 [Service]
-EnvironmentFile=/etc/systemd-gpio/%i
-ExecStartPre=/usr/bin/gpio -g mode $GPIO in
-ExecStartPre=/usr/bin/gpio -g mode $GPIO $MODE
-ExecStart=/bin/sh -c "while gpio -g wfi $GPIO $DIR; do echo \"$MESSAGE\"; $COMMAND; sleep $DEBOUNCE; done"
+EnvironmentFile=/etc/systemd/system/gpio-trigger@.service.d/%i
+Type=simple
+ExecStartPre=/usr/local/bin/gpio -g mode $GPIO in
+ExecStartPre=/usr/local/bin/gpio -g mode $GPIO $MODE
+ExecStart=/bin/sh -c "/usr/local/bin/gpio -g wfi $GPIO falling && /bin/sleep $HOLDTIME"
+ExecStartPost=/bin/sh -c "/usr/local/bin/gpio -g read $GPIO|/bin/grep '0' && /bin/sleep $RELEASETIME && /usr/local/bin/gpio -g read $GPIO|/bin/grep '1'"
+ExecStop=/bin/echo \"$MESSAGE\"
+ExecStop=/bin/sh -c "$COMMAND"
+ExecStopPost=/bin/sleep $DEBOUNCE
+
 Restart=on-success
+SuccessExitStatus=1
 
 [Install]
 WantedBy=multi-user.target
