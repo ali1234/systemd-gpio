@@ -1,6 +1,7 @@
 GPIO=3
 MODE=up
 
+PRIO=0
 HOLDTIME=5
 RELEASETIME=25
 MESSAGE="Restart requested by GPIO trigger."
