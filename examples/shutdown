@@ -1,6 +1,7 @@
 GPIO=3
 MODE=up
 
+PRIO=1
 HOLDTIME=1
 RELEASETIME=29
 MESSAGE="Shutdown requested by GPIO trigger."
